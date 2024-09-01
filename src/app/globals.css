@@ -1,6 +1,11 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+/* app/globals.css or src/app/globals.css */
+@import "leaflet/dist/leaflet.css";
+@import "leaflet-draw/dist/leaflet.draw.css";
+
+/* Your global styles can follow here */
 
 :root {
   --foreground-rgb: 0, 0, 0;
