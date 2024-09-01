@@ -11,7 +11,7 @@ const LeafletMapWithDrawing = () => {
   const [center, setCenter] = useState<[number, number]>([51.505, -0.09]);
   const [zoom, setZoom] = useState(13);
   const [polygons, setPolygons] = useState<any[]>([]);
-  const [finalArea, setFinalArea] = useState<number>(0);
+  const [totalArea, setTotalArea] = useState<number>(0);
 
   const _onCreate = (e: any) => {
     const { layerType, layer } = e;
@@ -33,32 +33,18 @@ const LeafletMapWithDrawing = () => {
         area: area,
       };
 
-      setPolygons((prevPolygons) => [...prevPolygons, newPolygon]);
+      setPolygons((prevPolygons) => {
+        const updatedPolygons = [...prevPolygons, newPolygon];
 
-      const finalCalculatedArea = calculateFinalArea([...polygons, newPolygon]);
-
-      setFinalArea(finalCalculatedArea);
-    }
-  };
-
-  const calculateFinalArea = (polygons: any[]) => {
-    let sumOfIndividualAreas = 0;
-    let intersectionArea = 0;
-
-    for (let i = 0; i < polygons.length; i++) {
-      sumOfIndividualAreas += polygons[i].area;
-
-      for (let j = i + 1; j < polygons.length; j++) {
-        const intersection = turf.intersect(
-          polygons[i].geoJson,
-          polygons[j].geoJson
+        const totalArea = updatedPolygons.reduce(
+          (sum, polygon) => sum + polygon.area,
+          0
         );
-        if (intersection) {
-          intersectionArea += turf.area(intersection);
-        }
-      }
+        setTotalArea(totalArea);
+
+        return updatedPolygons;
+      });
     }
-    return sumOfIndividualAreas - intersectionArea;
   };
 
   return (
@@ -104,8 +90,7 @@ const LeafletMapWithDrawing = () => {
           ))}
         </ul>
         <p>
-          <strong>Final Area (with common area counted only once):</strong>{" "}
-          {finalArea.toFixed(2)} square meters
+          <strong>Total Area:</strong> {totalArea.toFixed(2)} square meters
         </p>
       </div>
     </div>
