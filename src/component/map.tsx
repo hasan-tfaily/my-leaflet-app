@@ -33,11 +33,10 @@ const LeafletMapWithDrawing = () => {
         area: area,
       };
 
-      const updatedPolygons = [...polygons, newPolygon];
+      setPolygons((prevPolygons) => [...prevPolygons, newPolygon]);
 
-      const finalCalculatedArea = calculateFinalArea(updatedPolygons);
+      const finalCalculatedArea = calculateFinalArea([...polygons, newPolygon]);
 
-      setPolygons(updatedPolygons);
       setFinalArea(finalCalculatedArea);
     }
   };
@@ -59,10 +58,9 @@ const LeafletMapWithDrawing = () => {
         }
       }
     }
-
     return sumOfIndividualAreas - intersectionArea;
   };
-  console.log(polygons);
+
   return (
     <div>
       <h2 className="text-center">
